@@ -12,6 +12,7 @@ runs:
       uses: cilium/cilium/.github/actions/conn-disrupt-test@main
       with:
         job-name: conformance-ipsec-e2e-key-rotation
+        extra-connectivity-test-flags: "--test 'no-ipsec-xfrm-errors,no-interrupted-connections'"
         operation-cmd: |
           KEYID=$(kubectl get secret -n kube-system cilium-ipsec-keys -o go-template --template={{.data.keys}} | base64 -d | cut -c 1)
           if [[ $KEYID -ge 15 ]]; then KEYID=0; fi

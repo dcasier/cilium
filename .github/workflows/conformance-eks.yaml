@@ -254,10 +254,23 @@ jobs:
           --junit-file "cilium-junits/${{ env.job_name }} (${{ join(matrix.*, ', ') }}) - 1.xml" \
           --junit-property github_job_step="Run connectivity test (${{ join(matrix.*, ', ') }})"
 
+      - name: Create XFRM tracing
+        shell: bash
+        run: |
+          kubectl create -f https://raw.githubusercontent.com/jschwinger233/xfrm-tracing/main/xfrm-tracing.ds.yaml
+          sleep 2
+          kubectl wait --for=condition=ready pod -l name=xfrm-tracing --timeout=360s
+
       - name: Run IPsec key rotation tests (${{ join(matrix.*, ', ') }})
         uses: ./.github/actions/ipsec-key-rotate
         with:
           key-type: "gcm(aes)"
+
+      - name: Get XFRM tracing logs
+        if: ${{ !success() && steps.install-cilium.outcome != 'skipped' }}
+        shell: bash
+        run: |
+          kubectl get po -l  name=xfrm-tracing -o name | xargs -I'{}' /bin/sh -c "echo '{}' && kubectl logs '{}'"
 
       - name: Post-test information gathering
         if: ${{ !success() && steps.install-cilium.outcome != 'skipped' }}
