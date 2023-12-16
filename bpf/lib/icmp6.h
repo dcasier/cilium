@@ -327,8 +327,7 @@ static __always_inline int __icmp6_handle_ns(struct __ctx_buff *ctx, int nh_off)
 		return send_icmp6_ndisc_adv(ctx, nh_off, &router_mac, false);
 	}
 
-	/* Unknown target address, drop */
-	return ACTION_UNKNOWN_ICMP6_NS;
+    return 0;
 }
 
 #ifndef SKIP_ICMPV6_NS_HANDLING

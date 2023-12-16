@@ -169,7 +169,8 @@ func (ep *epInfoCache) RequireRouting() bool {
 
 // RequireEndpointRoute returns if the endpoint wants a per endpoint route
 func (ep *epInfoCache) RequireEndpointRoute() bool {
-	return ep.requireEndpointRoute
+	// return ep.requireEndpointRoute
+	return false
 }
 
 func (ep *epInfoCache) GetPolicyVerdictLogFilter() uint32 {
